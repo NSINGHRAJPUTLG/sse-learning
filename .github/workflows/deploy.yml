@@ -35,4 +35,4 @@ jobs:
             git pull origin main
             cd backend
             npm install
-            pm2 restart backend
+            pm2 reload backend

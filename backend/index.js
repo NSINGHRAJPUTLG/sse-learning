@@ -4,7 +4,9 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 
-app.get("/stream", (req, res) => {
+
+
+app.get("/stream", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -21,6 +23,10 @@ app.get("/stream", (req, res) => {
     res.end();
   });
 });
+
+app.use('/test',async()=>{
+  res.send({status:'ok'})
+})
 
 app.listen(4000, () => {
   console.log("SSE server running on http://localhost:4000");
