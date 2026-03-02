@@ -27,8 +27,11 @@ app.get("/stream", async (req, res) => {
   });
 });
 
-app.use('/test',async()=>{
-  res.send({status:'ok'})
+app.use('/test',async(req,res)=>{
+  res.status(200).json({
+    status: "OK",
+    service: "Backend running"
+  });
 })
 
 // Configure server to work on both localhost and 0.0.0.0
