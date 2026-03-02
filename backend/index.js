@@ -1,9 +1,12 @@
 const express = require("express");
 const cors = require("cors");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 
 const app = express();
 app.use(cors());
-
 
 
 app.get("/stream", async (req, res) => {
@@ -28,6 +31,10 @@ app.use('/test',async()=>{
   res.send({status:'ok'})
 })
 
-app.listen(4000, () => {
-  console.log("SSE server running on http://localhost:4000");
+// Configure server to work on both localhost and 0.0.0.0
+const PORT = process.env.PORT || 4000;
+const HOST = process.env.HOST || "0.0.0.0";
+
+app.listen(PORT, HOST, () => {
+  console.log(`Server started on ${HOST}:${PORT}`);
 });
