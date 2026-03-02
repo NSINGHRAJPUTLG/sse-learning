@@ -23,8 +23,13 @@ jobs:
           cd sse
           npm install
           npm run build
+      
+      - name: Install backend deps
+        run: |
+          cd backend
+          npm install
 
-      - name: SSH Deploy
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -33,6 +38,12 @@ jobs:
           script: |
             cd ~/apps/sse-learning
             git pull origin main
+
             cd backend
             npm install
             pm2 reload backend
+
+            cd ../sse
+            npm install
+            npm run build
+            pm2 reload sse || pm2 start npm --name sse -- start
