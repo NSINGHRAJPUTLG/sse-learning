@@ -10,33 +10,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      # 1️⃣ Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # 3️⃣ Build Frontend (Next.js)
       - name: Build Frontend
         run: |
           cd sse
           npm install
           npm run build
 
+      # 4️⃣ Deploy to VPS via SSH
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          command_timeout: 30m
           script: |
             cd ~/apps/sse-learning
+
+            # Pull latest code
             git pull origin main
 
+            # Backend setup
             cd backend
             npm install
             pm2 reload backend || pm2 start server.js --name backend
 
+            # Frontend setup
             cd ../sse
+            npm install
             pm2 reload sse || pm2 start npm --name sse -- start
+
+            pm2 save
