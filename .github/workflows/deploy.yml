@@ -24,10 +24,10 @@ jobs:
       - name: Build Frontend
         run: |
           cd sse
-          npm install
+          npm ci
           npm run build
 
-      # 4️⃣ Upload Frontend Build to VPS (FIXED)
+      # 4️⃣ Upload Frontend Build to VPS
       - name: Upload Frontend Build
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -39,7 +39,7 @@ jobs:
           target: "~/apps/sse-learning/sse"
           strip_components: 1
 
-      # 5️⃣ Deploy Backend + Restart Services
+      # 5️⃣ Deploy Backend + Restart Services (FIXED)
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -49,16 +49,28 @@ jobs:
           port: 22
           command_timeout: 30m
           script: |
+            set -e
+
+            echo "🚀 Starting Deployment"
+
             cd ~/apps/sse-learning
 
-            # Pull backend latest source
-            git pull origin main
+            # ----------------------
+            # FORCE CLEAN REPO STATE
+            # ----------------------
+            echo "🔄 Resetting repository"
+            git fetch origin
+            git reset --hard origin/main
+            git clean -fd
 
             # ----------------------
-            # Backend
+            # Backend Setup
             # ----------------------
+            echo "📦 Installing backend dependencies"
             cd backend
-            npm install
+            npm ci
+
+            echo "♻️ Restarting backend"
             if pm2 describe backend > /dev/null; then
               pm2 reload backend --update-env
             else
@@ -66,11 +78,13 @@ jobs:
             fi
 
             # ----------------------
-            # Frontend
+            # Frontend Setup
             # ----------------------
+            echo "📦 Installing frontend production deps"
             cd ../sse
-            npm install --production
+            npm ci --omit=dev
 
+            echo "♻️ Restarting frontend"
             if pm2 describe sse > /dev/null; then
               pm2 reload sse --update-env
             else
@@ -78,3 +92,5 @@ jobs:
             fi
 
             pm2 save
+
+            echo "✅ Deployment Complete"
