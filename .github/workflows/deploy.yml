@@ -1,96 +1,96 @@
-name: Deploy MERN App
+# name: Deploy MERN App
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      # 1️⃣ Checkout repository
-      - name: Checkout code
-        uses: actions/checkout@v4
+#     steps:
+#       # 1️⃣ Checkout repository
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+#       # 2️⃣ Setup Node
+#       - name: Setup Node
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 20
 
-      # 3️⃣ Install & Build Frontend
-      - name: Build Frontend
-        run: |
-          cd sse
-          npm ci
-          npm run build
+#       # 3️⃣ Install & Build Frontend
+#       - name: Build Frontend
+#         run: |
+#           cd sse
+#           npm ci
+#           npm run build
 
-      # 4️⃣ Upload Frontend Build to VPS
-      - name: Upload Frontend Build
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: 22
-          source: "sse/.next/**,sse/public/**,sse/package.json,sse/package-lock.json,sse/next.config.ts"
-          target: "~/apps/sse-learning/sse"
-          strip_components: 1
+#       # 4️⃣ Upload Frontend Build to VPS
+#       - name: Upload Frontend Build
+#         uses: appleboy/scp-action@v0.1.7
+#         with:
+#           host: ${{ secrets.VPS_HOST }}
+#           username: ${{ secrets.VPS_USER }}
+#           key: ${{ secrets.VPS_SSH_KEY }}
+#           port: 22
+#           source: "sse/.next/**,sse/public/**,sse/package.json,sse/package-lock.json,sse/next.config.ts"
+#           target: "~/apps/sse-learning/sse"
+#           strip_components: 1
 
-      # 5️⃣ Deploy Backend + Restart Services (FIXED)
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: 22
-          command_timeout: 30m
-          script: |
-            set -e
+#       # 5️⃣ Deploy Backend + Restart Services (FIXED)
+#       - name: Deploy to VPS
+#         uses: appleboy/ssh-action@v1.0.3
+#         with:
+#           host: ${{ secrets.VPS_HOST }}
+#           username: ${{ secrets.VPS_USER }}
+#           key: ${{ secrets.VPS_SSH_KEY }}
+#           port: 22
+#           command_timeout: 30m
+#           script: |
+#             set -e
 
-            echo "🚀 Starting Deployment"
+#             echo "🚀 Starting Deployment"
 
-            cd ~/apps/sse-learning
+#             cd ~/apps/sse-learning
 
-            # ----------------------
-            # FORCE CLEAN REPO STATE
-            # ----------------------
-            echo "🔄 Resetting repository"
-            git fetch origin
-            git reset --hard origin/main
-            git clean -fd
+#             # ----------------------
+#             # FORCE CLEAN REPO STATE
+#             # ----------------------
+#             echo "🔄 Resetting repository"
+#             git fetch origin
+#             git reset --hard origin/main
+#             git clean -fd
 
-            # ----------------------
-            # Backend Setup
-            # ----------------------
-            echo "📦 Installing backend dependencies"
-            cd backend
-            npm ci
+#             # ----------------------
+#             # Backend Setup
+#             # ----------------------
+#             echo "📦 Installing backend dependencies"
+#             cd backend
+#             npm ci
 
-            echo "♻️ Restarting backend"
-            if pm2 describe backend > /dev/null; then
-              pm2 reload backend --update-env
-            else
-              pm2 start index.js --name backend
-            fi
+#             echo "♻️ Restarting backend"
+#             if pm2 describe backend > /dev/null; then
+#               pm2 reload backend --update-env
+#             else
+#               pm2 start index.js --name backend
+#             fi
 
-            # ----------------------
-            # Frontend Setup
-            # ----------------------
-            echo "📦 Installing frontend production deps"
-            cd ../sse
-            npm ci --omit=dev
+#             # ----------------------
+#             # Frontend Setup
+#             # ----------------------
+#             echo "📦 Installing frontend production deps"
+#             cd ../sse
+#             npm ci --omit=dev
 
-            echo "♻️ Restarting frontend"
-            if pm2 describe sse > /dev/null; then
-              pm2 reload sse --update-env
-            else
-              pm2 start node_modules/next/dist/bin/next --name sse -- start -p 3000
-            fi
+#             echo "♻️ Restarting frontend"
+#             if pm2 describe sse > /dev/null; then
+#               pm2 reload sse --update-env
+#             else
+#               pm2 start node_modules/next/dist/bin/next --name sse -- start -p 3000
+#             fi
 
-            pm2 save
+#             pm2 save
 
-            echo "✅ Deployment Complete"
+#             echo "✅ Deployment Complete"

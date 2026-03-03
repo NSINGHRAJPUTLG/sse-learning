@@ -4,7 +4,7 @@ const logger = require('./logger');
 
 async function connectDb() {
   try {
-    console.log('env.mongoUri',mongoUri)
+    console.log('env.mongoUri',env.mongoUri)
     await mongoose.connect(env.mongoUri, {
       maxPoolSize: env.mongoPoolSize,
       minPoolSize: 5,
