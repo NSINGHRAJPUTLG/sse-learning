@@ -45,11 +45,19 @@ jobs:
             # Backend setup
             cd backend
             npm install
-            pm2 reload backend || pm2 start server.js --name backend
+            if pm2 describe backend > /dev/null; then
+              pm2 reload backend --update-env
+            else
+              pm2 start index.js --name backend
+            fi
 
             # Frontend setup
             cd ../sse
             npm install
-            pm2 reload sse || pm2 start npm --name sse -- start
+            if pm2 describe sse > /dev/null; then
+              pm2 reload sse --update-env
+            else
+              pm2 start npm --name sse -- start
+            fi
 
             pm2 save
