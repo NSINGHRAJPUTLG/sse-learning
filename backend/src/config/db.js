@@ -12,7 +12,7 @@ async function connectDb() {
     });
     logger.info('MongoDB connected');
   } catch (error) {
-    logger.error('MongoDB connection failed:', error);
+    logger.error('MongoDB connection failed:', error,env.mongoUri);
     throw error;
   }
 }
