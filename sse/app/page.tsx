@@ -5,7 +5,7 @@ export default function Home() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const eventSource = new EventSource("http://localhost:4000/stream");
+    const eventSource = new EventSource("https://api.nsrgfx.in/stream");
 
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
