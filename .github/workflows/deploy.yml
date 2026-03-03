@@ -20,14 +20,14 @@ jobs:
         with:
           node-version: 20
 
-      # 3️⃣ Install & Build Frontend (Next.js)
+      # 3️⃣ Install & Build Frontend
       - name: Build Frontend
         run: |
           cd sse
           npm install
           npm run build
 
-      # 4️⃣ Upload Frontend Build to VPS
+      # 4️⃣ Upload Frontend Build to VPS (FIXED)
       - name: Upload Frontend Build
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -35,13 +35,9 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
-          source: |
-            sse/.next
-            sse/public
-            sse/package.json
-            sse/package-lock.json
-            sse/next.config.ts
-          target: "~/apps/sse-learning"
+          source: "sse/.next/**,sse/public/**,sse/package.json,sse/package-lock.json,sse/next.config.ts"
+          target: "~/apps/sse-learning/sse"
+          strip_components: 1
 
       # 5️⃣ Deploy Backend + Restart Services
       - name: Deploy to VPS
@@ -55,7 +51,7 @@ jobs:
           script: |
             cd ~/apps/sse-learning
 
-            # Pull backend source
+            # Pull backend latest source
             git pull origin main
 
             # ----------------------
