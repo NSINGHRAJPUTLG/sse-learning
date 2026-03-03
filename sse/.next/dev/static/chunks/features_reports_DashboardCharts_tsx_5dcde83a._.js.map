@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/lz-28/Documents/learning/sse/features/reports/DashboardCharts.tsx"],"sourcesContent":["'use client';\n\nimport { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';\n\nexport default function DashboardCharts({ attendanceToday }: { attendanceToday: { _id: string; count: number }[] }) {\n  return (\n    <section className=\"bg-white border rounded p-4 h-80\">\n      <h3 className=\"font-semibold mb-4\">Attendance Today</h3>\n      <ResponsiveContainer width=\"100%\" height=\"90%\">\n        <BarChart data={attendanceToday}>\n          <XAxis dataKey=\"_id\" />\n          <YAxis />\n          <Tooltip />\n          <Bar dataKey=\"count\" fill=\"#0f172a\" />\n        </BarChart>\n      </ResponsiveContainer>\n    </section>\n  );\n}\n"],"names":[],"mappings":";;;;;AAEA;AAAA;AAAA;AAAA;AAAA;AAAA;AAFA;;;AAIe,SAAS,gBAAgB,EAAE,eAAe,EAAyD;IAChH,qBACE,6LAAC;QAAQ,WAAU;;0BACjB,6LAAC;gBAAG,WAAU;0BAAqB;;;;;;0BACnC,6LAAC,6LAAmB;gBAAC,OAAM;gBAAO,QAAO;0BACvC,cAAA,6LAAC,mKAAQ;oBAAC,MAAM;;sCACd,6LAAC,iKAAK;4BAAC,SAAQ;;;;;;sCACf,6LAAC,iKAAK;;;;;sCACN,6LAAC,qKAAO;;;;;sCACR,6LAAC,6JAAG;4BAAC,SAAQ;4BAAQ,MAAK;;;;;;;;;;;;;;;;;;;;;;;AAKpC;KAdwB"}}]
+}

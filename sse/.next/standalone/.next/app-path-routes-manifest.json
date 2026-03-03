@@ -1,0 +1,22 @@
+{
+  "/favicon.ico/route": "/favicon.ico",
+  "/_not-found/page": "/_not-found",
+  "/_global-error/page": "/_global-error",
+  "/(auth)/login/page": "/login",
+  "/(auth)/register/page": "/register",
+  "/403/page": "/403",
+  "/page": "/",
+  "/(dashboard)/attendance/page": "/attendance",
+  "/(dashboard)/audit/my/page": "/audit/my",
+  "/(dashboard)/dashboard/page": "/dashboard",
+  "/(dashboard)/notifications/page": "/notifications",
+  "/(dashboard)/employees/[id]/page": "/employees/[id]",
+  "/(dashboard)/employees/create/page": "/employees/create",
+  "/(dashboard)/payroll/[id]/page": "/payroll/[id]",
+  "/(dashboard)/payroll/page": "/payroll",
+  "/(dashboard)/reports/page": "/reports",
+  "/(dashboard)/leave/apply/page": "/leave/apply",
+  "/(dashboard)/leave/page": "/leave",
+  "/(dashboard)/audit/page": "/audit",
+  "/(dashboard)/employees/page": "/employees"
+}

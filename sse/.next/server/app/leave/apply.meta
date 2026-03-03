@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(dashboard)/layout,_N_T_/(dashboard)/leave/layout,_N_T_/(dashboard)/leave/apply/layout,_N_T_/(dashboard)/leave/apply/page,_N_T_/leave/apply"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KGRhc2hib2FyZCk/leave/apply/__PAGE__",
+    "/!KGRhc2hib2FyZCk/leave/apply",
+    "/!KGRhc2hib2FyZCk/leave",
+    "/!KGRhc2hib2FyZCk",
+    "/_index",
+    "/_head"
+  ]
+}

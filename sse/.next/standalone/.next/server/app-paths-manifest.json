@@ -1,0 +1,22 @@
+{
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(auth)/register/page": "app/(auth)/register/page.js",
+  "/403/page": "app/403/page.js",
+  "/page": "app/page.js",
+  "/(dashboard)/attendance/page": "app/(dashboard)/attendance/page.js",
+  "/(dashboard)/audit/my/page": "app/(dashboard)/audit/my/page.js",
+  "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
+  "/(dashboard)/notifications/page": "app/(dashboard)/notifications/page.js",
+  "/(dashboard)/employees/[id]/page": "app/(dashboard)/employees/[id]/page.js",
+  "/(dashboard)/employees/create/page": "app/(dashboard)/employees/create/page.js",
+  "/(dashboard)/payroll/[id]/page": "app/(dashboard)/payroll/[id]/page.js",
+  "/(dashboard)/payroll/page": "app/(dashboard)/payroll/page.js",
+  "/(dashboard)/reports/page": "app/(dashboard)/reports/page.js",
+  "/(dashboard)/leave/apply/page": "app/(dashboard)/leave/apply/page.js",
+  "/(dashboard)/leave/page": "app/(dashboard)/leave/page.js",
+  "/(dashboard)/audit/page": "app/(dashboard)/audit/page.js",
+  "/(dashboard)/employees/page": "app/(dashboard)/employees/page.js"
+}

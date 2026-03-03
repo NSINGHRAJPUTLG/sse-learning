@@ -1,0 +1,37 @@
+export const navByRole: Record<string, { label: string; href: string }[]> = {
+  EMPLOYEE: [
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Attendance', href: '/attendance' },
+    { label: 'Leave', href: '/leave' },
+    { label: 'Payroll', href: '/payroll' },
+    { label: 'Notifications', href: '/notifications' },
+    { label: 'My Activity', href: '/audit/my' },
+  ],
+  MANAGER: [
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Team Attendance', href: '/attendance' },
+    { label: 'Team Leaves', href: '/leave' },
+    { label: 'Reports', href: '/reports' },
+    { label: 'Notifications', href: '/notifications' },
+  ],
+  HR_ADMIN: [
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Employees', href: '/employees' },
+    { label: 'Attendance', href: '/attendance' },
+    { label: 'Leave', href: '/leave' },
+    { label: 'Payroll', href: '/payroll' },
+    { label: 'Reports', href: '/reports' },
+    { label: 'Audit Logs', href: '/audit' },
+    { label: 'Notifications', href: '/notifications' },
+  ],
+  SUPER_ADMIN: [
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Employees', href: '/employees' },
+    { label: 'Attendance', href: '/attendance' },
+    { label: 'Leave', href: '/leave' },
+    { label: 'Payroll', href: '/payroll' },
+    { label: 'Reports', href: '/reports' },
+    { label: 'Audit Logs', href: '/audit' },
+    { label: 'Notifications', href: '/notifications' },
+  ],
+};
