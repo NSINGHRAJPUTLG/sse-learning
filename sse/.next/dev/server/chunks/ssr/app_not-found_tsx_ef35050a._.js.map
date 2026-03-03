@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/lz-28/Documents/learning/sse/app/not-found.tsx"],"sourcesContent":["export default function NotFound() {\n  return (\n    <main className=\"min-h-screen grid place-items-center bg-slate-50\">\n      <div className=\"text-center\">\n        <h1 className=\"text-3xl font-bold\">404</h1>\n        <p className=\"text-slate-600\">Page not found.</p>\n      </div>\n    </main>\n  );\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACtB,qBACE,8OAAC;QAAK,WAAU;kBACd,cAAA,8OAAC;YAAI,WAAU;;8BACb,8OAAC;oBAAG,WAAU;8BAAqB;;;;;;8BACnC,8OAAC;oBAAE,WAAU;8BAAiB;;;;;;;;;;;;;;;;;AAItC"}}]
-}

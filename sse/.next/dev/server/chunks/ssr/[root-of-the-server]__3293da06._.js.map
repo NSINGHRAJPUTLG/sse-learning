@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 26, "column": 0}, "map": {"version":3,"sources":["file:///Users/lz-28/Documents/learning/sse/app/page.tsx"],"sourcesContent":["import { cookies } from 'next/headers';\nimport { redirect } from 'next/navigation';\n\nexport default async function HomePage() {\n  const token = (await cookies()).get('access_token')?.value;\n  redirect(token ? '/dashboard' : '/login');\n}\n"],"names":[],"mappings":";;;;AAAA;AACA;AAAA;;;AAEe,eAAe;IAC5B,MAAM,QAAQ,CAAC,MAAM,IAAA,0IAAO,GAAE,EAAE,GAAG,CAAC,iBAAiB;IACrD,IAAA,iMAAQ,EAAC,QAAQ,eAAe;AAClC"}}]
-}

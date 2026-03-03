@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/lz-28/Documents/learning/sse/app/error.tsx"],"sourcesContent":["'use client';\n\nexport default function GlobalError({ error }: { error: Error }) {\n  return (\n    <main className=\"min-h-screen grid place-items-center bg-slate-50 p-8\">\n      <div className=\"bg-white border rounded-lg p-6 max-w-lg\">\n        <h2 className=\"font-semibold text-lg\">Something went wrong</h2>\n        <p className=\"text-slate-600 text-sm mt-2\">{error.message}</p>\n      </div>\n    </main>\n  );\n}\n"],"names":[],"mappings":";;;;;AAAA;;AAEe,SAAS,YAAY,EAAE,KAAK,EAAoB;IAC7D,qBACE,6LAAC;QAAK,WAAU;kBACd,cAAA,6LAAC;YAAI,WAAU;;8BACb,6LAAC;oBAAG,WAAU;8BAAwB;;;;;;8BACtC,6LAAC;oBAAE,WAAU;8BAA+B,MAAM,OAAO;;;;;;;;;;;;;;;;;AAIjE;KATwB"}}]
-}
