@@ -20,14 +20,30 @@ jobs:
         with:
           node-version: 20
 
-      # 3️⃣ Build Frontend (Next.js)
+      # 3️⃣ Install & Build Frontend (Next.js)
       - name: Build Frontend
         run: |
           cd sse
           npm install
           npm run build
 
-      # 4️⃣ Deploy to VPS via SSH
+      # 4️⃣ Upload Frontend Build to VPS
+      - name: Upload Frontend Build
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          source: |
+            sse/.next
+            sse/public
+            sse/package.json
+            sse/package-lock.json
+            sse/next.config.ts
+          target: "~/apps/sse-learning"
+
+      # 5️⃣ Deploy Backend + Restart Services
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -39,10 +55,12 @@ jobs:
           script: |
             cd ~/apps/sse-learning
 
-            # Pull latest code
+            # Pull backend source
             git pull origin main
 
-            # Backend setup
+            # ----------------------
+            # Backend
+            # ----------------------
             cd backend
             npm install
             if pm2 describe backend > /dev/null; then
@@ -51,13 +69,16 @@ jobs:
               pm2 start index.js --name backend
             fi
 
-            # Frontend setup
+            # ----------------------
+            # Frontend
+            # ----------------------
             cd ../sse
-            npm install
+            npm install --production
+
             if pm2 describe sse > /dev/null; then
               pm2 reload sse --update-env
             else
-              pm2 start npm --name sse -- start
+              pm2 start node_modules/next/dist/bin/next --name sse -- start -p 3000
             fi
 
             pm2 save
