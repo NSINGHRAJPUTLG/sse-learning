@@ -3,12 +3,18 @@ const env = require('./env');
 const logger = require('./logger');
 
 async function connectDb() {
-  await mongoose.connect(env.mongoUri, {
-    maxPoolSize: env.mongoPoolSize,
-    minPoolSize: 5,
-    autoIndex: env.nodeEnv !== 'production',
-  });
-  logger.info('MongoDB connected');
+  try {
+    console.log('env.mongoUri',mongoUri)
+    await mongoose.connect(env.mongoUri, {
+      maxPoolSize: env.mongoPoolSize,
+      minPoolSize: 5,
+      autoIndex: env.nodeEnv !== 'production',
+    });
+    logger.info('MongoDB connected');
+  } catch (error) {
+    logger.error('MongoDB connection failed:', error);
+    throw error;
+  }
 }
 
 module.exports = { connectDb };
