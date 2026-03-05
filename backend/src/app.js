@@ -11,7 +11,7 @@ require('./modules/notifications/notification.events');
 const auditMiddleware = require('./modules/audit/audit.middleware');
 
 const app = express();
-// app.disable('x-powered-by'); 
+app.disable('x-powered-by'); 
 
 app.use(
   cors({

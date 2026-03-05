@@ -17,11 +17,11 @@ const env = {
   corsOrigin: process.env.CORS_ORIGIN || '*',
   enableCsrf: (process.env.ENABLE_CSRF || 'false') === 'true',
   cookieSecure: (process.env.COOKIE_SECURE || 'false') === 'true',
-  logLevel: process.env.LOG_LEVEL || 'info',
+  logLevel: process.env.LOG_LEVEL || 'info', 
   attendanceFullDayHours: Number(process.env.ATTENDANCE_FULL_DAY_HOURS || 8),
   attendanceHalfDayHours: Number(process.env.ATTENDANCE_HALF_DAY_HOURS || 4),
   attendanceLateHour: Number(process.env.ATTENDANCE_LATE_HOUR || 9),
   attendanceLateMinute: Number(process.env.ATTENDANCE_LATE_MINUTE || 30),
 };
-
+ 
 module.exports = env;
