@@ -38,8 +38,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
           source: "sse/.next/standalone/**"
-          target: "~/apps/sse-learning/sse"
-          strip_components: 2
+          target: "~/apps/sse-learning"
+          strip_components: 0
 
       # 5️⃣ Deploy Backend + Restart Services (FIXED)
       - name: Deploy to VPS
@@ -82,7 +82,7 @@ jobs:
             # ----------------------
             # Frontend Setup
             # ----------------------
-            cd ../sse
+            cd sse/.next/standalone
             
             echo "♻️ Restarting frontend"
             if pm2 describe sse > /dev/null; then
