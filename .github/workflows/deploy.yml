@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 20
 
-      # 3️⃣ Install & Build Frontend
+      # 3️⃣ Build Frontend (Standalone)
       - name: Build Frontend
         run: |
           cd sse
@@ -29,7 +29,26 @@ jobs:
           cp -r public .next/standalone/
           cp -r .next/static .next/standalone/.next/
 
-      # 4️⃣ Upload Frontend Build to VPS
+      # 4️⃣ Reset Repo on VPS FIRST
+      - name: Reset Repository on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+
+            echo "🔄 Resetting repository"
+
+            cd ~/apps/sse-learning
+
+            git fetch origin
+            git reset --hard origin/main
+            git clean -fd
+
+      # 5️⃣ Upload Frontend Build AFTER Reset
       - name: Upload Frontend Build
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -38,41 +57,26 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
           source: "sse/.next/standalone/**"
-          target: "~/apps/sse-learning"
-          strip_components: 0
+          target: "~/apps/sse-learning/sse/.next/standalone"
+          strip_components: 3
 
-      # 5️⃣ Deploy Backend + Restart Services (FIXED)
-      - name: Deploy to VPS
+      # 6️⃣ Restart Services
+      - name: Restart Services
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
-          command_timeout: 30m
           script: |
             set -e
-
-            echo "🚀 Starting Deployment"
 
             cd ~/apps/sse-learning
 
             # ----------------------
-            # FORCE CLEAN REPO STATE
+            # Restart Backend
             # ----------------------
-            echo "🔄 Resetting repository"
-            git fetch origin
-            git reset --hard origin/main
-            git clean -fd
-
-            # ----------------------
-            # Backend Setup
-            # ----------------------
-            echo "📦 Installing backend dependencies"
             cd backend
-            npm ci
-
-            echo "♻️ Restarting backend"
             if pm2 describe backend > /dev/null; then
               pm2 reload backend --update-env
             else
@@ -80,11 +84,9 @@ jobs:
             fi
 
             # ----------------------
-            # Frontend Setup
+            # Restart Frontend
             # ----------------------
-            cd sse/.next/standalone
-            
-            echo "♻️ Restarting frontend"
+            cd ../sse/.next/standalone
             if pm2 describe sse > /dev/null; then
               pm2 reload sse --update-env
             else
