@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from '@/store/auth.store';
+import { useRequestLoaderStore } from '@/store/request-loader.store';
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.nsrgfx.in/api';
 
@@ -10,7 +11,16 @@ export const api = axios.create({
 
 const refreshClient = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
 
+function startGlobalRequest() {
+  useRequestLoaderStore.getState().startRequest();
+}
+
+function finishGlobalRequest() {
+  useRequestLoaderStore.getState().finishRequest();
+}
+
 api.interceptors.request.use((config) => {
+  startGlobalRequest();
   const { token } = useAuthStore.getState();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -18,9 +28,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+refreshClient.interceptors.request.use((config) => {
+  startGlobalRequest();
+  return config;
+});
+
 api.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    finishGlobalRequest();
+    return res;
+  },
   async (error) => {
+    finishGlobalRequest();
     const original = (error.config || {}) as any;
 
     if (error?.response?.status === 401 && !original?._retry) {
@@ -44,6 +63,17 @@ api.interceptors.response.use(
       if (typeof window !== 'undefined') window.location.href = '/login';
     }
 
+    return Promise.reject(error);
+  }
+);
+
+refreshClient.interceptors.response.use(
+  (res) => {
+    finishGlobalRequest();
+    return res;
+  },
+  (error) => {
+    finishGlobalRequest();
     return Promise.reject(error);
   }
 );

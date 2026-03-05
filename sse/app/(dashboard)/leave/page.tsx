@@ -1,15 +1,38 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import { approveLeave, getLeaves, rejectLeave } from '@/services/leave.service';
+import { getErrorMessage } from '@/lib/toast';
 
 export default function LeavePage() {
   const qc = useQueryClient();
+  const [approvingId, setApprovingId] = useState('');
+  const [rejectingId, setRejectingId] = useState('');
   const { data } = useQuery({ queryKey: ['leaves'], queryFn: () => getLeaves({ page: 1, limit: 20 }) });
 
-  const approve = useMutation({ mutationFn: (id: string) => approveLeave(id), onSuccess: () => qc.invalidateQueries({ queryKey: ['leaves'] }) });
-  const reject = useMutation({ mutationFn: (id: string) => rejectLeave(id), onSuccess: () => qc.invalidateQueries({ queryKey: ['leaves'] }) });
+  const approve = useMutation({
+    mutationFn: (id: string) => approveLeave(id),
+    onMutate: (id) => setApprovingId(id),
+    onSettled: () => setApprovingId(''),
+    onSuccess: () => {
+      toast.success('Leave approved successfully');
+      qc.invalidateQueries({ queryKey: ['leaves'] });
+    },
+    onError: (error) => toast.error(getErrorMessage(error, 'Failed to approve leave')),
+  });
+  const reject = useMutation({
+    mutationFn: (id: string) => rejectLeave(id),
+    onMutate: (id) => setRejectingId(id),
+    onSettled: () => setRejectingId(''),
+    onSuccess: () => {
+      toast.success('Leave rejected successfully');
+      qc.invalidateQueries({ queryKey: ['leaves'] });
+    },
+    onError: (error) => toast.error(getErrorMessage(error, 'Failed to reject leave')),
+  });
 
   return (
     <section className="space-y-4">
@@ -28,8 +51,20 @@ export default function LeavePage() {
                 <td className="p-2">{row.totalDays}</td>
                 <td className="p-2">{row.status}</td>
                 <td className="p-2 space-x-2">
-                  <button onClick={() => approve.mutate(row._id)} className="text-emerald-700">Approve</button>
-                  <button onClick={() => reject.mutate(row._id)} className="text-red-700">Reject</button>
+                  <button
+                    onClick={() => approve.mutate(row._id)}
+                    disabled={approve.isPending || reject.isPending}
+                    className="text-emerald-700 disabled:opacity-60"
+                  >
+                    {approve.isPending && approvingId === row._id ? 'Approving...' : 'Approve'}
+                  </button>
+                  <button
+                    onClick={() => reject.mutate(row._id)}
+                    disabled={approve.isPending || reject.isPending}
+                    className="text-red-700 disabled:opacity-60"
+                  >
+                    {reject.isPending && rejectingId === row._id ? 'Rejecting...' : 'Reject'}
+                  </button>
                 </td>
               </tr>
             ))}

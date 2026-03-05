@@ -3,7 +3,9 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import toast from 'react-hot-toast';
 import { register as registerUser } from '@/services/auth.service';
+import { getErrorMessage } from '@/lib/toast';
 
 const schema = z.object({
   companyId: z.string().min(1),
@@ -21,9 +23,13 @@ export default function RegisterPage() {
   });
 
   async function onSubmit(values: FormData) {
-    await registerUser(values);
-    reset();
-    alert('User registered');
+    try {
+      await registerUser(values);
+      reset();
+      toast.success('User registered successfully');
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'User registration failed'));
+    }
   }
 
   return (
@@ -41,7 +47,9 @@ export default function RegisterPage() {
             <option value="MANAGER">MANAGER</option>
             <option value="HR_ADMIN">HR_ADMIN</option>
           </select>
-          <button disabled={isSubmitting} className="w-full bg-slate-900 text-white rounded p-2">Create</button>
+          <button disabled={isSubmitting} className="w-full bg-slate-900 text-white rounded p-2 disabled:opacity-60">
+            {isSubmitting ? 'Submitting...' : 'Create'}
+          </button>
         </form>
       </section>
     </main>

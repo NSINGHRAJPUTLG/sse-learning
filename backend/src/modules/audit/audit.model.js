@@ -12,7 +12,7 @@ const auditLogSchema = new mongoose.Schema(
     after: { type: mongoose.Schema.Types.Mixed, default: null },
     ipAddress: { type: String, trim: true },
     userAgent: { type: String, trim: true },
-    createdAt: { type: Date, default: Date.now, index: true },
+    createdAt: { type: Date, default: Date.now },
   },
   { versionKey: false }
 );

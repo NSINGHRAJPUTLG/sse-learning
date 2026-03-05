@@ -4,7 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import toast from 'react-hot-toast';
 import { login } from '@/services/auth.service';
+import { getErrorMessage } from '@/lib/toast';
 import { useAuthStore } from '@/store/auth.store';
 
 const schema = z.object({
@@ -29,9 +31,14 @@ export default function LoginForm() {
   });
 
   async function onSubmit(values: FormData) {
-    const data = await login(values);
-    setSession(data.accessToken, data.refreshToken);
-    router.push('/dashboard');
+    try {
+      const data = await login(values);
+      setSession(data.accessToken, data.refreshToken);
+      toast.success('Logged in successfully');
+      router.push('/dashboard');
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Login failed'));
+    }
   }
 
   return (

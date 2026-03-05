@@ -4,7 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import toast from 'react-hot-toast';
 import { createEmployee } from '@/services/employee.service';
+import { getErrorMessage } from '@/lib/toast';
 
 const schema = z.object({
   firstName: z.string().min(1),
@@ -26,18 +28,23 @@ export default function CreateEmployeePage() {
   });
 
   async function onSubmit(values: FormData) {
-    await createEmployee({
-      firstName: values.firstName,
-      lastName: values.lastName,
-      joiningDate: values.joiningDate,
-      employmentType: values.employmentType,
-      user: {
-        email: values.email,
-        password: values.password,
-        role: values.role,
-      },
-    });
-    router.push('/employees');
+    try {
+      await createEmployee({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        joiningDate: values.joiningDate,
+        employmentType: values.employmentType,
+        user: {
+          email: values.email,
+          password: values.password,
+          role: values.role,
+        },
+      });
+      toast.success('Employee created successfully');
+      router.push('/employees');
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Failed to create employee'));
+    }
   }
 
   return (
@@ -59,7 +66,9 @@ export default function CreateEmployeePage() {
           <option value="EMPLOYEE">EMPLOYEE</option>
           <option value="MANAGER">MANAGER</option>
         </select>
-        <button disabled={isSubmitting} className="bg-slate-900 text-white rounded p-2">{isSubmitting ? 'Saving...' : 'Create'}</button>
+        <button disabled={isSubmitting} className="bg-slate-900 text-white rounded p-2">
+          {isSubmitting ? 'Saving...' : 'Create'}
+        </button>
       </form>
     </section>
   );

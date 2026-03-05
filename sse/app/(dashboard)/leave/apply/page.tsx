@@ -5,7 +5,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import { applyLeave, getLeaveTypes } from '@/services/leave.service';
+import { getErrorMessage } from '@/lib/toast';
 
 const schema = z.object({
   leaveTypeId: z.string().min(1),
@@ -27,8 +29,12 @@ export default function ApplyLeavePage() {
   }, [leaveTypes, setValue]);
 
   async function onSubmit(values: FormData) {
-    await mutation.mutateAsync(values);
-    alert('Leave applied');
+    try {
+      await mutation.mutateAsync(values);
+      toast.success('Leave applied successfully');
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Leave application failed'));
+    }
   }
 
   return (
@@ -44,7 +50,9 @@ export default function ApplyLeavePage() {
         </div>
         {errors.startDate ? <p className="text-xs text-red-600">{errors.startDate.message}</p> : null}
         <textarea className="w-full border rounded p-2" rows={4} placeholder="Reason" {...register('reason')} />
-        <button disabled={isSubmitting} className="bg-slate-900 text-white rounded p-2">Submit</button>
+        <button disabled={isSubmitting} className="bg-slate-900 text-white rounded p-2 disabled:opacity-60">
+          {isSubmitting ? 'Submitting...' : 'Submit'}
+        </button>
       </form>
     </section>
   );
