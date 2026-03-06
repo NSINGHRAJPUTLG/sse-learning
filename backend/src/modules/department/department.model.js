@@ -19,3 +19,4 @@ departmentSchema.index({ companyId: 1, isActive: 1 });
 const Department = mongoose.models.Department || mongoose.model('Department', departmentSchema);
 
 module.exports = Department;
+ 

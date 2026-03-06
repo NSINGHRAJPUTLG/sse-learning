@@ -7,6 +7,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { logout } from '@/services/auth.service';
 import { getErrorMessage } from '@/lib/toast';
 import NotificationsDropdown from './NotificationsDropdown';
+import { useTheme } from '@/components/theme/ThemeProvider';
 
 type TopbarProps = {
   onMenuClick?: () => void;
@@ -15,6 +16,7 @@ type TopbarProps = {
 export default function Topbar({ onMenuClick }: TopbarProps) {
   const router = useRouter();
   const { user, logout: clear } = useAuthStore();
+  const { theme, toggleTheme, isReady } = useTheme();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   async function handleLogout() {
@@ -47,6 +49,14 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
         <p className="text-xs text-slate-500 truncate hidden sm:block">{user?.email || 'Guest'}</p>
       </div>
       <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="px-3 py-2 rounded border text-sm text-slate-700 bg-white"
+          aria-label="Toggle light and dark theme"
+        >
+          {isReady && theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+        </button>
         <NotificationsDropdown />
         <button
           onClick={handleLogout}

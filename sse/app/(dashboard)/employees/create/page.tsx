@@ -11,6 +11,7 @@ import { getErrorMessage } from '@/lib/toast';
 const schema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
+  designation: z.string().optional(),
   joiningDate: z.string().min(1),
   employmentType: z.enum(['FULL_TIME', 'INTERN', 'CONTRACT']),
   email: z.string().email(),
@@ -32,6 +33,7 @@ export default function CreateEmployeePage() {
       await createEmployee({
         firstName: values.firstName,
         lastName: values.lastName,
+        designation: values.designation?.trim() || undefined,
         joiningDate: values.joiningDate,
         employmentType: values.employmentType,
         user: {
@@ -54,6 +56,7 @@ export default function CreateEmployeePage() {
         <input className="border rounded p-2" placeholder="First Name" {...register('firstName')} />
         {errors.firstName ? <p className="text-xs text-red-600">{errors.firstName.message}</p> : null}
         <input className="border rounded p-2" placeholder="Last Name" {...register('lastName')} />
+        <input className="border rounded p-2" placeholder="Designation (optional)" {...register('designation')} />
         <input className="border rounded p-2" type="date" {...register('joiningDate')} />
         <select className="border rounded p-2" {...register('employmentType')}>
           <option value="FULL_TIME">FULL_TIME</option>

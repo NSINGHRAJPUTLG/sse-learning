@@ -15,3 +15,4 @@ router.delete('/:id', roleMiddleware(['SUPER_ADMIN', 'HR_ADMIN']), validate(idPa
 router.get('/:id/stats', validate(idParamSchema, 'params'), controller.getDepartmentStats);
 
 module.exports = router;
+ 

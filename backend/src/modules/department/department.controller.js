@@ -18,7 +18,7 @@ const getDepartments = asyncHandler(async (req, res) => {
     success: true,
     message: 'Departments fetched successfully',
     data,
-  });
+  }); 
 });
 
 const getDepartmentById = asyncHandler(async (req, res) => {

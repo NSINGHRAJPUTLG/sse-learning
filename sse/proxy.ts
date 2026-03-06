@@ -9,12 +9,14 @@ const protectedPaths = [
   '/reports',
   '/audit',
   '/notifications',
+  '/departments',
 ];
 
 const roleRules: Record<string, string[]> = {
   '/reports': ['MANAGER', 'HR_ADMIN', 'SUPER_ADMIN'],
   '/audit': ['HR_ADMIN', 'SUPER_ADMIN'],
   '/audit/my': ['EMPLOYEE', 'MANAGER', 'HR_ADMIN', 'SUPER_ADMIN'],
+  '/departments/create': ['HR_ADMIN', 'SUPER_ADMIN'],
 };
 
 export function proxy(req: NextRequest) {
@@ -41,5 +43,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/employees/:path*', '/attendance/:path*', '/leave/:path*', '/payroll/:path*', '/reports/:path*', '/audit/:path*', '/notifications/:path*'],
+  matcher: ['/dashboard/:path*', '/employees/:path*', '/attendance/:path*', '/leave/:path*', '/payroll/:path*', '/reports/:path*', '/audit/:path*', '/notifications/:path*', '/departments/:path*'],
 };

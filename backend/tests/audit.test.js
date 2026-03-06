@@ -59,7 +59,7 @@ describe('Audit module', () => {
       .put(`/api/employees/${employeeId}`)
       .set('Authorization', `Bearer ${token}`)
       .send({ designation: 'Senior Engineer' })
-      .expect(200);
+      .expect(200); 
 
     await request(app)
       .delete(`/api/employees/${employeeId}`)

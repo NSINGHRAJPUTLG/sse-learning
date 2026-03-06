@@ -15,7 +15,7 @@ function ensureWriteAccess(actor) {
   if (!['SUPER_ADMIN', 'HR_ADMIN'].includes(actor.role)) {
     throw new ApiError(403, 'Only SUPER_ADMIN or HR_ADMIN can modify departments');
   }
-}
+} 
 
 async function getActorEmployee(actor) {
   if (actor.role !== 'EMPLOYEE') return null;
@@ -152,7 +152,7 @@ async function getDepartments(queryParams, actor) {
     if (!self || !self.departmentId) {
       return { items: [], pagination: { page, limit, total: 0, totalPages: 1 } };
     }
-    filters._id = self.departmentId;
+    filters._id = self.departmentId; 
   }
 
   const [items, total] = await Promise.all([
