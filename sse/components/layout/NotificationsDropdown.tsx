@@ -38,7 +38,7 @@ export default function NotificationsDropdown() {
 
   return (
     <details className="relative">
-      <summary className="cursor-pointer list-none px-3 py-2 rounded bg-slate-100 text-sm">
+      <summary className="cursor-pointer list-none px-3 py-2 rounded bg-slate-100 text-sm text-slate-700">
         Notifications ({items.length})
       </summary>
       <div className="absolute right-0 mt-2 w-80 bg-white border rounded shadow p-3 z-20">
@@ -51,9 +51,9 @@ export default function NotificationsDropdown() {
         </button>
         <ul className="space-y-2">
           {items.map((item: any) => (
-            <li key={item._id} className="border rounded p-2 text-xs">
-              <div className="font-semibold">{item.title}</div>
-              <p>{item.message}</p>
+            <li key={item._id} className="border rounded p-2 text-xs text-slate-700">
+              <div className="font-semibold text-slate-900">{item.title}</div>
+              <p className="text-slate-600">{item.message}</p>
               <button
                 onClick={() => readOne.mutate(item._id)}
                 disabled={readOne.isPending}

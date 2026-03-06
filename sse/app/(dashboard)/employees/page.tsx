@@ -4,16 +4,22 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { deleteEmployee, getEmployees } from '@/services/employee.service';
+import { deleteEmployee, getEmployees, updateEmployee, type Employee } from '@/services/employee.service';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { getErrorMessage } from '@/lib/toast';
 import Skeleton from '@/components/ui/Skeleton';
+import { useAuthStore } from '@/store/auth.store';
 
 export default function EmployeesPage() {
   const qc = useQueryClient();
+  const role = useAuthStore((s) => s.role);
+  const canManage = role === 'SUPER_ADMIN' || role === 'HR_ADMIN';
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [deletingId, setDeletingId] = useState('');
+  const [editingDesignationId, setEditingDesignationId] = useState('');
+  const [designationDraft, setDesignationDraft] = useState('');
+  const [savingDesignationId, setSavingDesignationId] = useState('');
   const debounced = useDebouncedValue(search, 400);
 
   const { data, isLoading } = useQuery({
@@ -31,6 +37,34 @@ export default function EmployeesPage() {
     },
     onError: (error) => toast.error(getErrorMessage(error, 'Failed to terminate employee')),
   });
+
+  const designationMutation = useMutation({
+    mutationFn: ({ id, designation }: { id: string; designation: string }) =>
+      updateEmployee(id, { designation: designation.trim() }),
+    onMutate: ({ id }) => setSavingDesignationId(id),
+    onSettled: () => setSavingDesignationId(''),
+    onSuccess: () => {
+      toast.success('Designation updated successfully');
+      setEditingDesignationId('');
+      setDesignationDraft('');
+      qc.invalidateQueries({ queryKey: ['employees'] });
+    },
+    onError: (error) => toast.error(getErrorMessage(error, 'Failed to update designation')),
+  });
+
+  function startDesignationEdit(emp: Employee) {
+    setEditingDesignationId(emp._id);
+    setDesignationDraft(emp.designation || '');
+  }
+
+  function cancelDesignationEdit() {
+    setEditingDesignationId('');
+    setDesignationDraft('');
+  }
+
+  function saveDesignation(empId: string) {
+    designationMutation.mutate({ id: empId, designation: designationDraft });
+  }
 
   if (isLoading) return <Skeleton className="h-36 w-full" />;
 
@@ -60,11 +94,32 @@ export default function EmployeesPage() {
             </tr>
           </thead>
           <tbody>
-            {(data?.items || []).map((emp: any) => (
+            {(data?.items || []).map((emp: Employee) => (
               <tr key={emp._id} className="border-t">
                 <td className="p-2">{emp.employeeId}</td>
                 <td className="p-2">{emp.firstName} {emp.lastName}</td>
-                <td className="p-2">{emp.designation || '-'}</td>
+                <td className="p-2">
+                  {canManage && editingDesignationId === emp._id ? (
+                    <div className="flex items-center gap-2">
+                      <input
+                        className="border rounded p-1 text-sm w-40"
+                        placeholder="Designation"
+                        value={designationDraft}
+                        onChange={(e) => setDesignationDraft(e.target.value)}
+                      />
+                      <button
+                        className="text-blue-600 disabled:opacity-60"
+                        disabled={designationMutation.isPending && savingDesignationId === emp._id}
+                        onClick={() => saveDesignation(emp._id)}
+                      >
+                        {designationMutation.isPending && savingDesignationId === emp._id ? 'Saving...' : 'Save'}
+                      </button>
+                      <button className="text-slate-600" onClick={cancelDesignationEdit}>Cancel</button>
+                    </div>
+                  ) : (
+                    <span>{emp.designation || '-'}</span>
+                  )}
+                </td>
                 <td className="p-2">{emp.status}</td>
                 <td className="p-2 space-x-2">
                   <Link href={`/employees/${emp._id}`} className="text-blue-600">View</Link>

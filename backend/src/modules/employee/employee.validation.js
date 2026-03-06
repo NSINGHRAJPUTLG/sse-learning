@@ -16,7 +16,7 @@ const createEmployeeSchema = z.object({
   employmentType: z.enum(EMPLOYMENT_TYPES),
   status: z.enum(EMPLOYEE_STATUSES).optional(),
   address: z.string().optional(),
-  emergencyContact: z.string().optional(),
+  emergencyContact: z.string().optional(), 
   salaryStructureId: z.string().optional(),
   user: z.object({
     email: z.string().email(),

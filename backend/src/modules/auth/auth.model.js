@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
       disabledTypes: [{ type: String, trim: true }],
     },
   },
-  { timestamps: true }
+  { timestamps: true } 
 );
 
 userSchema.index({ companyId: 1, email: 1 });

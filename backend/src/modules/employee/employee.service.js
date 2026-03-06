@@ -189,7 +189,7 @@ async function createEmployee(data, actor) {
           phone: data.phone,
           dateOfBirth: data.dateOfBirth,
           gender: data.gender,
-          departmentId: data.departmentId,
+          departmentId: data.departmentId, 
           designation: data.designation,
           reportingManagerId: data.reportingManagerId,
           joiningDate: data.joiningDate,
